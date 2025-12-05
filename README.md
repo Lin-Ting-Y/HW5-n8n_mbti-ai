@@ -90,9 +90,5 @@
 
 - 工作流靈感與設定方式參考了 [soluckysummer/n8n_workflows](https://github.com/soluckysummer/n8n_workflows/tree/main)。
 
-## 引用格式
-
-- APA 7th：Author, A. A. (2025). *Generative AI MBTI Agent Workflow* (README). c:\Users\linty\OneDrive\class\AIoT\HW5\README.md
-- IEEE：A. A. Author, "Generative AI MBTI Agent Workflow," README, c:\Users\linty\OneDrive\class\AIoT\HW5\README.md, 2025.
 
 如需更多說明，可在 n8n 的執行記錄中檢視每個節點的入出資料，或進一步撰寫測試腳本確保流程穩定。
