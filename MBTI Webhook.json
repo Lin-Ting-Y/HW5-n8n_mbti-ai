@@ -1,0 +1,145 @@
+{
+  "name": "MBTI Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "f2318528-f36e-48a0-9f7c-784ac521c111",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*"
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -448,
+        -224
+      ],
+      "id": "b337f6f1-f596-4f40-993b-d2e198159ef7",
+      "name": "Webhook",
+      "webhookId": "f2318528-f36e-48a0-9f7c-784ac521c111"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify({ \"content\": $json.candidates[0].content.parts[0].text }) }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        144,
+        -224
+      ],
+      "id": "74a50813-0c9c-49df-8791-0a0817618f00",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "models/gemini-2.5-pro",
+          "mode": "list",
+          "cachedResultName": "models/gemini-2.5-pro"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=你是一位毒舌又精準的 MBTI 專家。\n使用者資料：\n- 暱稱：{{ $json.body.name }}\n- 週五晚上：{{ $json.body.q1 }}\n- 朋友訴苦：{{ $json.body.q2 }}\n- 旅遊習慣：{{ $json.body.q3 }}\n\n請根據這三個行為特質（E/I, T/F, J/P），直接判定他的 MBTI 類型（第四個字母 S/N 你自己看感覺猜）。\n\n請用 Markdown 格式回傳：\n### 🔮 你的靈魂原型：**[MBTI代碼]**\n**[一句話形容]**\n\n> 💬 **AI 毒舌點評：** [針對他的旅遊和交友習慣，給一個幽默犀利的吐槽]"
+            }
+          ]
+        },
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.googleGemini",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        -224
+      ],
+      "id": "322ecca0-c4ef-4fe8-adb4-afc4c5d559b5",
+      "name": "Message a model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "j0JFB9EL1DPYN9b4",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.line.me/v2/bot/message/push",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer fxfhm4xytzg8U6LRT+Vd/DlNIgqN3i9pKv9hRon2kl7aGdc3EeYsTYRd15dAgo2BYNbuh0lOzYi5+Px2cwiUmnPgRbQJYgB0DBgWuffXL9jSxOzh9hsycgmmznpBtsO8NmWWllG0DW7E2qoT/RmP7wdB04t89/1O/w1cDnyilFU="
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{\n  JSON.stringify({\n    \"to\": $('Webhook').item.json.body.id || \"Uc0590d0cba47e677eb745aae82057756\",\n    \"messages\": [\n      {\n        \"type\": \"text\",\n        \"text\": \"🔔 新測驗通知！\\n\\n👤 暱稱：\" + $('Webhook').item.json.body.name + \"\\n\\n🧠 分析結果：\\n\" + $json.candidates[0].content.parts[0].text\n      }\n    ]\n  })\n}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        144,
+        -48
+      ],
+      "id": "6f2df7c9-8d97-43c1-9f22-ddaf6a4762e6",
+      "name": "HTTP Request"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Respond to Webhook": {
+      "main": [
+        []
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b5e7c54b-8435-4c88-bf1b-d86b600917fc",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "84df06da0f6e3638b65b1c5ca2961cdb01f45849afa525f4f9b856652283ba2d"
+  },
+  "id": "iw317shkIUGlcu9C",
+  "tags": []
+}
