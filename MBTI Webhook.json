@@ -77,7 +77,7 @@
           "parameters": [
             {
               "name": "Authorization",
-              "value": "Bearer fxfhm4xytzg8U6LRT+Vd/DlNIgqN3i9pKv9hRon2kl7aGdc3EeYsTYRd15dAgo2BYNbuh0lOzYi5+Px2cwiUmnPgRbQJYgB0DBgWuffXL9jSxOzh9hsycgmmznpBtsO8NmWWllG0DW7E2qoT/RmP7wdB04t89/1O/w1cDnyilFU="
+              "value": "Bearer YOUR_TOKEN_HERE"
             }
           ]
         },
