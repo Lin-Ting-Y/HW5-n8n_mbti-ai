@@ -65,6 +65,7 @@
   - Vercel 前端可使用 `.env` 存放 API 端點與鑰匙。  
   - n8n 可部署於自家伺服器、雲端 VM 或 n8n cloud，確保 HTTPS 與可用性。  
   - LINE Messaging API 需在 LINE Developers 後台設定 Webhook URL 與對象。
+   - 將 `config.sample.js` 複製為 `config.js` 並填入實際 `N8N_WEBHOOK_URL`，`config.js` 已加入 `.gitignore`，避免在版控中洩漏敏感資訊。
 
 ---
 

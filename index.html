@@ -68,14 +68,20 @@
         </div>
     </div>
 
+    <script src="config.js"></script>
     <script>
-        // 🛑 請在這裡換成你 n8n 的 Production URL
-        const N8N_WEBHOOK_URL = "https://lintingyu.app.n8n.cloud/webhook/f2318528-f36e-48a0-9f7c-784ac521c111";
+        // 從獨立設定檔讀取 webhook，避免在版控中硬編 URL
+        const appConfig = (window.__APP_CONFIG__ && typeof window.__APP_CONFIG__ === 'object') ? window.__APP_CONFIG__ : {};
+        const N8N_WEBHOOK_URL = appConfig.N8N_WEBHOOK_URL || '';
 
         const form = document.getElementById('analysisForm');
         const submitBtn = document.getElementById('submitBtn');
         const resultArea = document.getElementById('resultArea');
         const resultText = document.getElementById('resultText');
+
+        if (!N8N_WEBHOOK_URL) {
+            console.warn('N8N_WEBHOOK_URL 未設定。請建立 config.js 並填入實際 webhook。');
+        }
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault(); // 防止網頁重新整理
@@ -95,6 +101,10 @@
             resultArea.classList.add('hidden');
 
             try {
+                if (!N8N_WEBHOOK_URL) {
+                    throw new Error('尚未設定 N8N webhook URL。');
+                }
+
                 // 3. 發送請求給 n8n
                 const response = await fetch(N8N_WEBHOOK_URL, {
                     method: 'POST',
