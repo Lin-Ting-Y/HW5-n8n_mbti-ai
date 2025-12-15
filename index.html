@@ -68,20 +68,14 @@
         </div>
     </div>
 
-    <script src="config.js"></script>
     <script>
-        // 從獨立設定檔讀取 webhook，避免在版控中硬編 URL
-        const appConfig = (window.__APP_CONFIG__ && typeof window.__APP_CONFIG__ === 'object') ? window.__APP_CONFIG__ : {};
-        const N8N_WEBHOOK_URL = appConfig.N8N_WEBHOOK_URL || '';
+        // ✅ 修正重點：只留這一行最乾淨的設定
+        const N8N_WEBHOOK_URL = "https://lintingyu.app.n8n.cloud/webhook/f2318528-f36e-48a0-9f7c-784ac521c111";
 
         const form = document.getElementById('analysisForm');
         const submitBtn = document.getElementById('submitBtn');
         const resultArea = document.getElementById('resultArea');
         const resultText = document.getElementById('resultText');
-
-        if (!N8N_WEBHOOK_URL) {
-            console.warn('N8N_WEBHOOK_URL 未設定。請建立 config.js 並填入實際 webhook。');
-        }
 
         form.addEventListener('submit', async (e) => {
             e.preventDefault(); // 防止網頁重新整理
@@ -101,12 +95,9 @@
             resultArea.classList.add('hidden');
 
             try {
-                if (!N8N_WEBHOOK_URL) {
-                    throw new Error('尚未設定 N8N webhook URL。');
-                }
-
                 // 3. 發送請求給 n8n
-                console.log("我的網址是：", N8N_WEBHOOK_URL);
+                console.log("正在發送請求至：", N8N_WEBHOOK_URL); // 加這行方便偵錯
+                
                 const response = await fetch(N8N_WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -117,8 +108,7 @@
                 if (response.ok) {
                     const jsonResponse = await response.json();
                     
-                    // 假設 n8n 回傳的 JSON 裡有 { "content": "..." } 或直接回傳文字
-                    // 這裡做個判斷，抓取正確的欄位
+                    // 抓取 n8n 回傳的文字內容 (相容多種格式)
                     const aiReply = jsonResponse.content || jsonResponse.result || jsonResponse.output || JSON.stringify(jsonResponse);
 
                     resultText.innerText = aiReply;
