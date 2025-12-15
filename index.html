@@ -106,6 +106,7 @@
                 }
 
                 // 3. 發送請求給 n8n
+                console.log("我的網址是：", N8N_WEBHOOK_URL);
                 const response = await fetch(N8N_WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
